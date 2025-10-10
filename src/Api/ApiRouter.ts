@@ -10,7 +10,7 @@ class ApiRouter {
 
   private initializeRoutes() {
     this.router.get("/teste", (req, res) => {
-      res.send("API Cifra Vernan");
+      res.send("teste");
     });
   }
 }

@@ -1,6 +1,7 @@
 import express, {Request, response, Response} from 'express';
 import swaggerUi from 'swagger-ui-express';
-import ApiRouter from './ApiRouter/apiRouter';
+import ApiRouter from './Api/ApiRouter';
+
 
 const app = express();
 const port = 3000;
