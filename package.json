@@ -1,0 +1,25 @@
+{
+  "name": "api_cifra_vernan",
+  "type": "module",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "marcuslaraa <marcus.lara@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "yarn build && nodemon dist/index.js",
+    "start": "node dist/index.js",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.7.1",
+    "@types/swagger-ui-express": "^4.1.8",
+    "nodemon": "^3.1.10",
+    "swagger-ui-express": "^5.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
