@@ -1,3 +1,5 @@
+Autores: Marcus Lara e Leandro
+
 # API Cifra Vernam
 
 Esta API implementa a cifra de Vernam para encriptação e decriptação de textos, desenvolvida com Node.js, Express e TypeScript. A documentação interativa está disponível via Swagger.
@@ -72,5 +74,3 @@ Acesse [http://localhost:3000/api-docs](http://localhost:3000/api-docs) para vis
 - O campo `cipherText` deve ser uma string de bits (apenas '0' e '1').
 - A chave segura pode ser gerada automaticamente ou enviada pelo usuário.
 - O Swagger exibe exemplos e validação dos campos.
-
-Autores: Marcus Lara e Leandro
