@@ -12,24 +12,25 @@ class VernanController {
 
   encrypt = (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { clearText, secureKey } = request?.body;
+      console.log('request', request?.body)
+      const { textoClaro, chave } = request?.body;
       
 
-      if (!clearText) response.status(400).json({ error: 'Texto claro é obrigatório' });
+      if (!textoClaro) response.status(400).json({ error: 'Texto claro é obrigatório' });
 
-      const clearTextWhitOutSpaces = clearText.replace(/\s/g, '');
+      const clearTextWhitOutSpaces = textoClaro.replace(/\s/g, '');
 
       let secureKeyBytes: Uint8Array;
       let secureKeybitString: string;
 
-      if (secureKey) {
-        const hasSpaceSecureKey = /\s/.test(secureKey);
+      if (chave) {
+        const hasSpaceSecureKey = /\s/.test(chave);
         if (hasSpaceSecureKey) return response.status(400).json({ error: 'A chave segura não deve conter espaços' });
 
 
-        if (clearTextWhitOutSpaces.length !== secureKey.length) return response.status(400).json({ error: 'A chave segura deve ter o mesmo tamanho do texto claro' });
+        if (clearTextWhitOutSpaces.length !== chave.length) return response.status(400).json({ error: 'A chave segura deve ter o mesmo tamanho do texto claro' });
 
-         secureKeyBytes = ConvertHelper.stringToUint8(secureKey);
+         secureKeyBytes = ConvertHelper.stringToUint8(chave);
          secureKeybitString = ConvertHelper.uint8ToBitString(secureKeyBytes);
       }
 
@@ -37,20 +38,19 @@ class VernanController {
 
       const clearTextbitString = ConvertHelper.uint8ToBitString(clearTextBytes);
 
-      const generateSecureKey = secureKey ? secureKeybitString : GenerateSecureKey.exec(clearTextbitString.length)
+      const generateSecureKey = chave ? secureKeybitString : GenerateSecureKey.exec(clearTextbitString.length)
 
       const result = this.encryptService.exec({bitString: clearTextbitString, secureKey: generateSecureKey});
 
       const resultBytes = ConvertHelper.bitStringToUint8(result);
-      const cipherText = ConvertHelper.uint8ToString(resultBytes);
+      // const cipherText = ConvertHelper.uint8ToString(resultBytes);
 
       response.status(200).json({ 
-        textoClaro: clearText,
+        textoClaro: textoClaro,
         textoClaroBit: clearTextbitString,
-        secureKey,
-        secureKeyBit: generateSecureKey,
-        cipherTextInBits: result,
-        cipherText
+        chave: chave,
+        chaveEmBit: generateSecureKey,
+        textoCifrado: result
       });
     } catch (error) {
       next(error);
@@ -59,28 +59,33 @@ class VernanController {
 
   decrypt = (request: Request, response: Response, next: NextFunction) => {
     try {
-      const { cipherText, secureKey } = request?.body;
+      const { textoCifrado, chave } = request?.body;
 
-      const isBitString = typeof cipherText === 'string' && /^[01]+$/.test(cipherText);
+      const isBitString = typeof textoCifrado === 'string' && /^[01]+$/.test(textoCifrado);
 
       if (!isBitString) {
         return response.status(400).json({ error: 'O texto cifrado deve ser uma string de bits (apenas 0 e 1)' });
       }
 
-      if (!cipherText) return response.status(400).json({ error: 'Texto cifrado é obrigatório' });
-      if (!secureKey) return response.status(400).json({ error: 'Chave segura é obrigatória' });
+      const isBitStringChave = typeof chave === 'string' && /^[01]+$/.test(textoCifrado);
+      if (!isBitStringChave) {
+        return response.status(400).json({ error: 'O texto cifrado deve ser uma string de bits (apenas 0 e 1)' });
+      }
 
-      const hasSpacecipherText = /\s/.test(cipherText);
+      if (!textoCifrado) return response.status(400).json({ error: 'Texto cifrado é obrigatório' });
+      if (!chave) return response.status(400).json({ error: 'Chave segura é obrigatória' });
+
+      const hasSpacecipherText = /\s/.test(textoCifrado);
       if (hasSpacecipherText) return response.status(400).json({ error: 'O texto cifrado não deve conter espaços' });
 
-      const hasSpaceSecureKey = /\s/.test(secureKey);
+      const hasSpaceSecureKey = /\s/.test(chave);
       if (hasSpaceSecureKey) return response.status(400).json({ error: 'A chave segura não deve conter espaços' });
 
-      const clearTextInbits = this.encryptService.exec({ bitString: cipherText, secureKey });
-      const clearTextBytes = ConvertHelper.bitStringToUint8(clearTextInbits);
-      const clearText = ConvertHelper.uint8ToString(clearTextBytes);
+      const textoClaroEmBits = this.encryptService.exec({ bitString: textoCifrado, secureKey: chave });
+      const clearTextBytes = ConvertHelper.bitStringToUint8(textoClaroEmBits);
+      const textoClaro = ConvertHelper.uint8ToString(clearTextBytes);
 
-      response.status(200).json({ clearTextInbits, secureKey, clearText });
+      response.status(200).json({ textoClaroEmBits, chave, textoClaro });
 
   } catch (error) {
       next(error);

@@ -14,7 +14,7 @@ class ApiRouter {
   private initializeRoutes() {
   /**
  * @openapi
- * /api/vernan/encrypt:
+ * /cifrar:
  *   post:
  *     summary: Encrypt a text using Vernam cipher
  *     description: Encrypt a text using Vernam cipher
@@ -25,16 +25,16 @@ class ApiRouter {
  *           schema:
  *             type: object
  *             required:
- *               - clearText
+ *               - textoClaro
  *             properties:
- *               clearText:
+ *               textoClaro:
  *                 type: string
- *               secureKey:
+ *               chave:
  *                 type: string
  *                 description: Optional secure key for encryption
  *           example:
- *             clearText: "Hello World"
- *             secureKey: "MinhaChaveOpcional"
+ *             textoClaro: "Hello World"
+ *             chave: "mjkuhgytrf"
  *     responses:
  *       '200':
  *         description: Successful operation
@@ -43,16 +43,16 @@ class ApiRouter {
  *             schema:
  *               type: object
  *               properties:
- *                 cipherText:
+ *                 textoCifrado:
  *                   type: string
  *             example:
- *               cipherText: "Encrypted text"
+ *               textoCifrado: "Encrypted text"
  */
-this.router.post("/vernan/encrypt", this.encryptController.encrypt);
+this.router.post("/cifrar", this.encryptController.encrypt);
 
   /**
    * @openapi
-   * /api/vernan/decrypt:
+   * /decifrar:
    *   post:
    *     summary: Decrypt a text using Vernam cipher
    *     description: Decrypt a text using Vernam cipher
@@ -63,16 +63,16 @@ this.router.post("/vernan/encrypt", this.encryptController.encrypt);
    *           schema:
    *             type: object
    *             required:
-   *               - cipherText
+   *               - textoCifrado
    *             properties:
-   *               cipherText:
+   *               textoCifrado:
    *                 type: string
-   *               secureKey:
+   *               chave:
    *                 type: string
    *                 description: Secure key for decryption
    *           example:
-   *             cipherText: "Encrypted text"
-   *             secureKey: "MinhaChaveOpcional"
+   *             textoCifrado: "Encrypted text"
+   *             chave: "kijudytgenbhg"
    *     responses:
    *       '200':
    *         description: Successful operation
@@ -81,12 +81,12 @@ this.router.post("/vernan/encrypt", this.encryptController.encrypt);
    *             schema:
    *               type: object
    *               properties:
-   *                 clearText:
+   *                 textoClaro:
    *                   type: string
    *             example:
-   *               clearText: "Hello World"
+   *               textoClaro: "Hello World"
    */
-this.router.post("/vernan/decrypt", this.encryptController.decrypt);
+this.router.post("/decifrar", this.encryptController.decrypt);
   
   }
 }
