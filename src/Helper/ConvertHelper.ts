@@ -4,16 +4,7 @@ class ConvertHelper {
     return encoder.encode(text);
   }
 
-  static uint8ToString = (bytes: Uint8Array) => {
-    const decoder = new TextDecoder();
-    return decoder.decode(bytes);
-  }
-
-  static uint8ToBitString = (bytes: Uint8Array) => {
-    return Array.from(bytes).map(byte => byte.toString(2).padStart(8, '0')).join('');
-  }
-
-  static bitStringToUint8 = (bits: string): Uint8Array => {
+   static bitStringToUint8 = (bits: string): Uint8Array => {
     if (bits.length % 8 !== 0) {
       throw new Error("O comprimento da string de bits deve ser múltiplo de 8");
     }
@@ -27,6 +18,16 @@ class ConvertHelper {
     }
     return out;
   }
+
+  static uint8ToString = (bytes: Uint8Array) => {
+    const decoder = new TextDecoder();
+    return decoder.decode(bytes);
+  }
+
+  static uint8ToBitString = (bytes: Uint8Array) => {
+    return Array.from(bytes).map(byte => byte.toString(2).padStart(8, '0')).join('');
+  }
+
 
   static uint8ToBitArray = (bytes: Uint8Array) => {
     const bits: number[] = [];
