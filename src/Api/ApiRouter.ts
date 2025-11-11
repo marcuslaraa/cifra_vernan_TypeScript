@@ -1,13 +1,15 @@
 import { Router } from "express";
 import VernanController from "../Controller/VernanController";
+import CesarController from "../Controller/CesarController";
 
 class ApiRouter {
   router: Router;
-  encryptController: VernanController;
+  vernanEncryptController: VernanController;
+  cesarEncryptController: CesarController;
 
   constructor() {
     this.router = Router();
-    this.encryptController = new VernanController();
+    this.vernanEncryptController = new VernanController();
     this.initializeRoutes();
   }
 
@@ -48,7 +50,7 @@ class ApiRouter {
  *             example:
  *               textoCifrado: "Encrypted text"
  */
-this.router.post("/cifrar", this.encryptController.encrypt);
+this.router.post("/cifrar", this.vernanEncryptController.encrypt);
 
   /**
    * @openapi
@@ -86,7 +88,11 @@ this.router.post("/cifrar", this.encryptController.encrypt);
    *             example:
    *               textoClaro: "Hello World"
    */
-this.router.post("/decifrar", this.encryptController.decrypt);
+this.router.post("/decifrar", this.vernanEncryptController.decrypt);
+
+
+this.router.post("")
+this.router.post("")
   
   }
 }
