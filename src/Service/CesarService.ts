@@ -1,21 +1,52 @@
 class CesarService {
-  encrypt(text: string, shift: number): string {
-    let result = ''
-    for (let i = 0; i < text.length; i++) {
-      const char = text.charCodeAt(i)
-      if (char >= 65 && char <= 90) {
-        result += String.fromCharCode(((char - 65 + shift) % 26) + 65)
-      } else if (char >= 97 && char <= 122) {
-        result += String.fromCharCode(((char - 97 + shift) % 26) + 97)
-      } else {
-        result += text.charAt(i)
-      }
+  encrypt(textoClaro: string, deslocamento: number): string {
+    const clearTextNoAccents = this.removeAccents(textoClaro);
+    const caracteres = clearTextNoAccents.split('');
+  const resultado: string[] = [];
+
+  for (const char of caracteres) {
+    let novoChar = char;
+
+    if (/[a-z]/.test(char)) {
+      const base = 'a'.charCodeAt(0);
+      const codigo = ((char.charCodeAt(0) - base + deslocamento) % 26 + 26) % 26 + base;
+      novoChar = String.fromCharCode(codigo);
     }
-    return result
+    else if (/[A-Z]/.test(char)) {
+      const base = 'A'.charCodeAt(0);
+      const codigo = ((char.charCodeAt(0) - base + deslocamento) % 26 + 26) % 26 + base;
+      novoChar = String.fromCharCode(codigo);
+    }
+
+    resultado.push(novoChar);
+
+  }
+  const textoCifrado = resultado.join('');
+
+  return textoCifrado;
+}
+
+  decrypt(textoCifrado: string, deslocamento: number): string {
+    return this.encrypt(textoCifrado, -deslocamento);
   }
 
-  decrypt(text: string, shift: number): string {
-    return this.encrypt(text, 26 - shift)
+  removeAccents(text: string): string {
+    return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+ bruteForce(textoCifrado: string) {
+    const textoSemAcento = this.removeAccents(textoCifrado);
+    const tentativas = [];
+
+    for (let deslocamento = 1; deslocamento < 26; deslocamento++) {
+      const textoClaro = this.decrypt(textoSemAcento, deslocamento);
+      tentativas.push({
+        deslocamento,
+        textoClaro
+      });
+    }
+
+    return tentativas;
   }
 }
 

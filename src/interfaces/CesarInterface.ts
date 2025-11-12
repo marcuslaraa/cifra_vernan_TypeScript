@@ -1,5 +1,7 @@
+import { Request, Response, NextFunction } from 'express';
+
 export interface ICesarController {
-  encrypt(text: string, shift: number): string;
-  decrypt(text: string, shift: number): string;
+  encrypt(request: Request, response: Response, next: NextFunction): void;
+    decrypt(request: Request, response: Response, next: NextFunction): void;
 
 }

@@ -1,5 +1,6 @@
 import { ICesarController } from '../interfaces/CesarInterface'
 import CesarService from '../Service/CesarService'
+import { Request, Response, NextFunction } from 'express';
 
 class CesarController implements ICesarController {
   cesarService: CesarService
@@ -8,13 +9,28 @@ class CesarController implements ICesarController {
     this.cesarService = new CesarService()
   }
 
-  encrypt(text: string, shift: number): string {
-    return this.cesarService.encrypt(text, shift)
+  encrypt = (request: Request, response: Response, next: NextFunction) => {
+    const { textoClaro, deslocamento } = request.body
+    const resultado = this.cesarService.encrypt(textoClaro, deslocamento)
+    response.json({ textoCifrado: resultado })
   }
 
-  decrypt(text: string, shift: number): string {
-    return this.cesarService.decrypt(text, shift)
+  decrypt = (request: Request, response: Response, next: NextFunction) => {
+    const { textoCifrado, deslocamento } = request.body
+    const resultado = this.cesarService.decrypt(textoCifrado, deslocamento)
+    response.json({ textoClaro: resultado })
   }
+
+  bruteForce = (request: Request, response: Response, next: NextFunction) => {
+    const { textoCifrado } = request.body;
+
+    if (!textoCifrado) {
+      return response.status(400).json({ erro: "O campo 'textoCifrado' é obrigatório." });
+    }
+
+    const tentativas = this.cesarService.bruteForce(textoCifrado);
+    response.json({ textoCifrado, tentativas });
+  };
 
 
 }
