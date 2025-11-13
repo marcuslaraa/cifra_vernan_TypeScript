@@ -29,7 +29,7 @@ class CesarController implements ICesarController {
     }
 
     const tentativas = this.cesarService.bruteForce(textoCifrado);
-    response.json({ textoCifrado, tentativas });
+    response.json({ textoCifrado });
   };
 
 

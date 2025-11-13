@@ -1,3 +1,5 @@
+import LanguageDetector from '../Helper/LanguageDetector';
+
 class CesarService {
   encrypt(textoClaro: string, deslocamento: number): string {
     const clearTextNoAccents = this.removeAccents(textoClaro);
@@ -34,20 +36,33 @@ class CesarService {
     return text.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
 
- bruteForce(textoCifrado: string) {
-    const textoSemAcento = this.removeAccents(textoCifrado);
-    const tentativas = [];
+ async bruteForce(textoCifrado: string) {
+  const textoSemAcento = this.removeAccents(textoCifrado);
+  const tentativas: { deslocamento: number; textoClaro: string; idioma: string; score: number }[] = [];
 
-    for (let deslocamento = 1; deslocamento < 26; deslocamento++) {
-      const textoClaro = this.decrypt(textoSemAcento, deslocamento);
-      tentativas.push({
-        deslocamento,
-        textoClaro
-      });
-    }
+  await LanguageDetector.init();
 
-    return tentativas;
+  for (let deslocamento = 1; deslocamento < 26; deslocamento++) {
+    const textoClaro = this.decrypt(textoSemAcento, deslocamento);
+    const idioma = LanguageDetector.detectLanguage(textoClaro);
+    const score = idioma === 'en' || idioma === 'pt' ? 1 : 0;
+
+    tentativas.push({ deslocamento, textoClaro, idioma, score });
   }
+
+  console.log('tentativas', tentativas.map(t => ({ deslocamento: t.deslocamento, textoClaro: t.textoClaro })));
+
+  const melhor = tentativas.reduce((prev, curr) => (curr.score > prev.score ? curr : prev));
+
+  if (melhor.idioma !== 'unknown') {
+    console.log(`✅ Possível texto claro encontrado: ${melhor.textoClaro} com deslocamento de ${melhor.deslocamento}`);
+  } else {
+    console.log('⚠️ Nenhum texto claro detectado com confiança.');
+  }
+
+  return melhor;
+}
+
 }
 
 export default CesarService

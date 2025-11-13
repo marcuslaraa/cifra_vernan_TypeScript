@@ -1,52 +1,83 @@
-Autores: Marcus Lara e Leandro
+# API Cifra de César
 
-# API Cifra Vernam
+**Envolvidos:** marcuslaraa, Leandro
 
-Esta API implementa a cifra de Vernam para encriptação e decriptação de textos, desenvolvida com Node.js, Express e TypeScript. A documentação interativa está disponível via Swagger.
+Esta API implementa a cifra de César para encriptação, decriptação e brute force de textos, desenvolvida com Node.js, Express e TypeScript. A documentação interativa está disponível via Swagger.
 
 ## Funcionalidades
 
-- **Encriptar texto**: Recebe um texto claro e uma chave segura (opcional), retorna o texto cifrado.
-- **Decriptar texto**: Recebe um texto cifrado (em bits) e uma chave segura, retorna o texto original.
+- **Encriptar texto**: Recebe um texto claro e um deslocamento (`deslocamento`), retorna o texto cifrado usando a cifra de César.
+- **Decriptar texto**: Recebe um texto cifrado e um deslocamento (`deslocamento`), retorna o texto original.
+- **Brute Force**: Recebe um texto cifrado e retorna todas as possíveis decifrações para todos os deslocamentos, indicando o idioma detectado.
 
 ## Endpoints
 
 ### Encriptar
 
-`POST /api/vernan/encrypt`
+`POST /api/cesar/encrypt`
 
 **Body:**
 ```json
 {
-  "clearText": "Hello World",
-  "secureKey": "MinhaChaveOpcional" // opcional
+  "textoClaro": "Hello World",
+  "deslocamento": 3
 }
 ```
 
 **Resposta:**
 ```json
 {
-  "cipherText": "010101010101..." // string de bits
+  "textoCifrado": "Khoor Zruog"
 }
 ```
 
 ### Decriptar
 
-`POST /api/vernan/decrypt`
+`POST /api/cesar/decrypt`
 
 **Body:**
 ```json
 {
-  "cipherText": "010101010101...",
-  "secureKey": "MinhaChaveOpcional"
+  "textoCifrado": "Khoor Zruog",
+  "deslocamento": 3
 }
 ```
 
 **Resposta:**
 ```json
 {
-  "clearText": "Hello World"
+  "textoClaro": "Hello World"
 }
+```
+
+### Brute Force
+
+`POST /api/cesar/bruteforce`
+
+**Body:**
+```json
+{
+  "textoCifrado": "Khoor Zruog"
+}
+```
+
+**Resposta:**
+```json
+[
+  {
+    "deslocamento": 1,
+    "textoClaro": "...",
+    "idioma": "en",
+    "score": 1
+  },
+  {
+    "deslocamento": 2,
+    "textoClaro": "...",
+    "idioma": "unknown",
+    "score": 0
+  }
+  // ... até deslocamento 25
+]
 ```
 
 ## Documentação Swagger
@@ -71,6 +102,6 @@ Acesse [http://localhost:3000/api-docs](http://localhost:3000/api-docs) para vis
 
 ## Observações
 
-- O campo `cipherText` deve ser uma string de bits (apenas '0' e '1').
-- A chave segura pode ser gerada automaticamente ou enviada pelo usuário.
+- O campo `deslocamento` define o deslocamento da cifra de César.
+- O endpoint de brute force retorna todas as tentativas e indica o idioma detectado.
 - O Swagger exibe exemplos e validação dos campos.
