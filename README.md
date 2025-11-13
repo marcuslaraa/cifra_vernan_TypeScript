@@ -1,6 +1,6 @@
 # API Cifra de César
 
-**Envolvidos:** marcuslaraa, Leandro
+**Envolvidos:** Marcus Lara, Leandro
 
 Esta API implementa a cifra de César para encriptação, decriptação e brute force de textos, desenvolvida com Node.js, Express e TypeScript. A documentação interativa está disponível via Swagger.
 
